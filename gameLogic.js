@@ -4,6 +4,8 @@
 
 var MSG = require('./message');
 
+var Math24Table = require('./math24_table');
+
 var CALLBACK_RECV =
 {
     "100":
@@ -40,6 +42,7 @@ module.exports =
         {
             var instance =
             {
+                MATH24_TABLE:Math24Table,
                 onRecv:function(data, ws)
                 {
                     var callback = CALLBACK_RECV[data.protocal.toString()];

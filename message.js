@@ -42,12 +42,13 @@ const Message =
         status:0,
         players:[],
     },
-    "PROTOCAL_C2S_YAKYUKEN":
+    "PROTOCAL_C2S_TAKEMATH":
     {
         protocal:PROTOCAL.PROTOCAL_C2S_YAKYUKEN,
         type:0,
+        math:[]//+-*/:k1,k2,k3,k4 {a,b,k,m},{c,d,k,n},{m,n,k,p}
     },
-    "PROTOCAL_S2C_ALL_YAKUKEN":
+    "PROTOCAL_S2C_ALL_TAKEMATH":
     {
         protocal:PROTOCAL.PROTOCAL_S2C_ALL_YAKUKEN,
         status:0, //0,shitou 1,jiandao 2,bu -1,unknown
