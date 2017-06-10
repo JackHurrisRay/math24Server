@@ -8,6 +8,8 @@ var cookie  = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
+var gameSystem = require('./gameSystem');
+
 module.exports =
     (
         function()
@@ -49,13 +51,53 @@ module.exports =
                 function(req, res)
                 {
                     ////////
+                    gameSystem.login(req, res);
+                }
+            );
+
+            app.use('/game',
+                function(req, res, next)
+                {
+                    if( gameSystem.checkLogin(req,res) )
+                    {
+                        next();
+                    }
+                }
+            );
+
+            app.put('/game/nor_mode',
+                function(req, res)
+                {
 
                 }
             );
 
+            app.put('/game/com_mode',
+                function(req, res)
+                {
+
+                }
+            );
+
+
+
+            ////////
+            const PORT = 2424;
+
             var instance =
             {
                 ////////
+                run:function()
+                {
+                    var server = app.listen(PORT, function(){
+                        var address = server.address();
+
+                        var host = address.address;
+                        var port = address.port;
+
+                        console.log('WEB_SERVER＿RUNNING: http://%s:%s', host, port);
+                    });
+                }
 
 
             };

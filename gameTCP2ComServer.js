@@ -46,6 +46,11 @@ const protocal_c2s =
         "COM SERVER":"Jack.L's Server",
         "content_id":0
     },
+    "MSG_C2S_CHECKLOGIN":
+    {
+        "protocal":ENUM_MSG_TYPE.ENUM_C2S_CHECK_LOGIN,
+        "player_id":0
+    },
     "MSG_C2S_REQUEST_GOLD":
     {
         "protocal":ENUM_MSG_TYPE.ENUM_C2S_REQUEST_GOLD,
@@ -75,6 +80,11 @@ const protocal_s2c =
     "MSG_S2C_CONNECT":
     {
         "protocal":ENUM_MSG_TYPE.ENUM_S2C_CONNECT,
+        "status":0
+    },
+    "MSG_S2C_CHECKLOGIN":
+    {
+        "protocal":ENUM_MSG_TYPE.ENUM_S2C_CHECK_LOGIN,
         "status":0
     },
     "MSG_S2C_REQUEST_GOLD":
@@ -122,27 +132,42 @@ module.exports =
                 ////////
                 isConn:false,
                 conn:null,
+                MSG_QUEUE:[],
+                CALLBACK:null,
                 run:function()
                 {
                     this.connect();
                 },
-                sendMsg:function(msg, check)
+                sendMsg:function(msg, callback)//send logic
                 {
-                    if( check )
+                    if( this.isConn && this.CALLBACK == null )
                     {
-                        if( this.isConn )
-                        {
-                            var _msgStr = JSON.stringify(msg);
-                            var _msg = base64.encoder(_msgStr);
-                            this.conn.write(_msg);
-                        }
+                        this.CALLBACK = callback;
+                        this._sendMsg(msg);
                     }
                     else
                     {
-                        var _msgStr = JSON.stringify(msg);
-                        var _msg = base64.encoder(_msgStr);
-                        this.conn.write(_msg);
+                        this._pushMsg(msg);
                     }
+                },
+                _pushMsg:function(msg, callback)
+                {
+                    var _msgStr = JSON.stringify(msg);
+                    var _msg = base64.encoder(_msgStr);
+
+                    var _PUSH_DATA =
+                    {
+                        data:_msg,
+                        callback:callback
+                    };
+
+                    this.MSG_QUEUE.push(_PUSH_DATA);
+                },
+                _sendMsg:function(msg)//send origin
+                {
+                    var _msgStr = JSON.stringify(msg);
+                    var _msg = base64.encoder(_msgStr);
+                    this.conn.write(_msg);
                 },
                 connect:function()
                 {
@@ -161,7 +186,7 @@ module.exports =
                             var msg = common.extendDeep(protocal_c2s.MSG_C2S_CONNECT);
                             msg.content_id = content_id;
 
-                            SELF.sendMsg(msg);
+                            SELF._sendMsg(msg);
                         }
                     );
 
@@ -192,7 +217,7 @@ module.exports =
                                 {
                                     SELF.connect();
                                 },
-                                1000
+                                retryTimeout
                             );
 
                         }
@@ -239,7 +264,38 @@ module.exports =
 
                             break;
                         }
+                        default:
+                        {
+                            if( this.CALLBACK )
+                            {
+                                this.CALLBACK(object);
+                                this.CALLBACK = null;
+                            }
+
+                            if( this.MSG_QUEUE.length > 0 )
+                            {
+                                var _msgData = this.MSG_QUEUE.pop();
+                                this.sendMsg(_msgData.data, _msgData.callback);
+                            }
+
+                            break;
+                        }
                     }
+                },
+                request_checkLogin:function(player_uid, callback)
+                {
+                    var msg = common.extendDeep( protocal_c2s.MSG_C2S_CHECKLOGIN );
+                    msg.player_id = player_uid;
+
+                    this.sendMsg(msg, callback);
+                },
+                request_gold:function(player_uid, callback)
+                {
+                    var msg = common.extendDeep( protocal_c2s.MSG_C2S_REQUEST_GOLD );
+                    msg.content_id = content_id;
+                    msg.player_id = player_uid;
+
+                    this.sendMsg(msg, callback);
                 }
             };
 

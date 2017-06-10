@@ -34,4 +34,24 @@ s.end();
 */
 
 var clientToComServer = require('./gameTCP2ComServer');
+var gameWEBServer     = require('./gameWEBServer');
+
 clientToComServer.run();
+
+var func_startWeb =
+    function()
+    {
+        if( clientToComServer.isConn )
+        {
+            gameWEBServer.run();
+        }
+        else
+        {
+            setTimeout(
+                func_startWeb,
+                1000
+            );
+        }
+    };
+
+func_startWeb();
