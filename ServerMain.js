@@ -33,5 +33,5 @@ s.write("];");
 s.end();
 */
 
-var gameServer = require('./gameServer');
-gameServer.run();
+var clientToComServer = require('./gameTCP2ComServer');
+clientToComServer.run();
