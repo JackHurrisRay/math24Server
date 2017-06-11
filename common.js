@@ -96,5 +96,12 @@ module.exports =
         }
 
 
+    },
+    GET_RAND:function(max)
+    {
+        var   value1 = Math.random() * 1000000 + (new Date()).getTime();
+        const value2 = Math.floor(value1);
+
+        return value2 % max;
     }
 };

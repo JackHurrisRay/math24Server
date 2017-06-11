@@ -68,14 +68,21 @@ module.exports =
             app.put('/game/nor_mode',
                 function(req, res)
                 {
+                    gameSystem.game_normal(req, res);
+                }
+            );
 
+            app.put('/game/find_answer',
+                function(req, res)
+                {
+                    gameSystem.game_findAnswer(req, res);
                 }
             );
 
             app.put('/game/com_mode',
                 function(req, res)
                 {
-
+                    gameSystem.game_competition(req, res);
                 }
             );
 

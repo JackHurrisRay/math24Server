@@ -245,14 +245,26 @@ module.exports =
                         {
                             this.onProcess(_object);
                         }
+                        else
+                        {
+                            this.CALLBACK = null;
+                        }
                     }
                 },
                 onProcess:function(object)
                 {
+                    var _callback = this.CALLBACK;
+                    this.CALLBACK = null;
+
                     switch (object.protocal)
                     {
                         case ENUM_MSG_TYPE.ENUM_S2C_CONNECT:
                         {
+                            if( _callback )
+                            {
+                                _callback(object);
+                            }
+
                             if( object.status == 0 )
                             {
                                 console.log('connect to ComServer successfully');
@@ -266,10 +278,9 @@ module.exports =
                         }
                         default:
                         {
-                            if( this.CALLBACK )
+                            if( _callback )
                             {
-                                this.CALLBACK(object);
-                                this.CALLBACK = null;
+                                _callback(object);
                             }
 
                             if( this.MSG_QUEUE.length > 0 )
