@@ -463,37 +463,35 @@ module.exports =
 
                     if( PLAYER && PLAYER_SESSION && PLAYER.COMPETITION_TIMES )
                     {
-                        var _sortFlag = [0,0,0,0];
+                        var _topSort =
+                        [
+                            parseInt(this.PLAYERS_TOP_SORT[0].getTopIndex(UID)),
+                            parseInt(this.PLAYERS_TOP_SORT[1].getTopIndex(UID)),
+                            parseInt(this.PLAYERS_TOP_SORT[2].getTopIndex(UID)),
+                            parseInt(this.PLAYERS_TOP_SORT[3].getTopIndex(UID))
+                        ];
 
                         if( PLAYER.COMPETITION_TIMES < 10 )
                         {
-                            for( var i in _sortFlag )
+                            for( var i in _topSort )
                             {
-                                _sortFlag[i] = 4999 + common.GET_RAND(500);
+                                _topSort[i] = 4999 + common.GET_RAND(500) + _topSort[i] * 200;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 100 )
                         {
-                            for( var i in _sortFlag )
+                            for( var i in _topSort )
                             {
-                                _sortFlag[i] = 1999 + common.GET_RAND(200);
+                                _topSort[i] = 1999 + common.GET_RAND(200) + _topSort[i] * 100;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 1000 )
                         {
-                            for( var i in _sortFlag )
+                            for( var i in _topSort )
                             {
-                                _sortFlag[i] = 199 + common.GET_RAND(20);
+                                _topSort[i] = 199 + common.GET_RAND(20) + _topSort[i] * 10;
                             }
                         }
-
-                        var _topSort =
-                        [
-                            this.PLAYERS_TOP_SORT[0].getTopIndex(UID) + _sortFlag[0],
-                            this.PLAYERS_TOP_SORT[1].getTopIndex(UID) + _sortFlag[1],
-                            this.PLAYERS_TOP_SORT[2].getTopIndex(UID) + _sortFlag[2],
-                            this.PLAYERS_TOP_SORT[3].getTopIndex(UID) + _sortFlag[3],
-                        ];
 
                         msg.top_result = _topSort;
                         msg.competition_times = PLAYER.COMPETITION_TIMES;

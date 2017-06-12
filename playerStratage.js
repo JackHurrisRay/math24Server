@@ -275,7 +275,7 @@ module.exports =
                 {
                     var _obj = this.SORT_ARRAY[i];
 
-                    if( _obj.player_id == player_id )
+                    if( _obj.player_id == UID )
                     {
                         _sortIndex = i;
                         break;
