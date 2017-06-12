@@ -289,7 +289,7 @@ module.exports =
                 this.SORT_ARRAY.sort(
                     function(a, b)
                     {
-                        return a.time < b.time;
+                        return a.time > b.time;
                     }
                 );
             }
