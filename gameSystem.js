@@ -475,21 +475,42 @@ module.exports =
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 4999 + common.GET_RAND(500) + _topSort[i] * 200;
+                                _topSort[i] = 4999 + common.GET_RAND(100) + _topSort[i] * 400;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 100 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 1999 + common.GET_RAND(200) + _topSort[i] * 100;
+                                _topSort[i] = 3999 + common.GET_RAND(80) + _topSort[i] * 200;
                             }
                         }
-                        else if( PLAYER.COMPETITION_TIMES < 1000 )
+                        else if( PLAYER.COMPETITION_TIMES < 200 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 199 + common.GET_RAND(20) + _topSort[i] * 10;
+                                _topSort[i] = 2999 + common.GET_RAND(60) + _topSort[i] * 100;
+                            }
+                        }
+                        else if( PLAYER.COMPETITION_TIMES < 300 )
+                        {
+                            for( var i in _topSort )
+                            {
+                                _topSort[i] = 1999 + common.GET_RAND(40) + _topSort[i] * 80;
+                            }
+                        }
+                        else if( PLAYER.COMPETITION_TIMES < 400 )
+                        {
+                            for( var i in _topSort )
+                            {
+                                _topSort[i] = 999 + common.GET_RAND(20) + _topSort[i] * 40;
+                            }
+                        }
+                        else if( PLAYER.COMPETITION_TIMES < 500 )
+                        {
+                            for( var i in _topSort )
+                            {
+                                _topSort[i] = 299 + common.GET_RAND(10) + _topSort[i] * 20;
                             }
                         }
 

@@ -113,22 +113,25 @@ module.exports =
                 filesys.load(this.FILE_PATH,
                     function(data)
                     {
+                        ////////
+                        SELF.DATA = data;
                         callback(data);
+
+                        ////////
+                        SELF.TIMER.init(
+                            1000,
+                            function()
+                            {
+                                if( SELF.COUNT_REF > 0 && !SELF.IS_SAVING )
+                                {
+                                    SELF.IS_SAVING = true;
+                                    SELF.save();
+                                }
+                            }
+                        );
+
                     }
                 );
-
-                this.TIMER.init(
-                    1000,
-                    function()
-                    {
-                        if( SELF.COUNT_REF > 0 && !SELF.IS_SAVING )
-                        {
-                            SELF.IS_SAVING = true;
-                            SELF.save();
-                        }
-                    }
-                );
-
 
             },
             save:function()
@@ -154,7 +157,14 @@ module.exports =
             },
             saveData:function(uid, player_data)
             {
-                this.DATA[uid] = player_data;
+                this.DATA[uid] =
+                {
+                    UID:player_data.UID,
+                    GOLD:player_data.GOLD,
+                    DATE:player_data.DATE,
+                    COMPETITION_TIMES:player_data.COMPETITION_TIMES
+                };
+
                 this.COUNT_REF += 1;
             },
             getPlayer:function(uid)
@@ -185,25 +195,30 @@ module.exports =
                 filesys.load(this.FILE_PATH,
                     function(data)
                     {
+                        ////////
                         for( var i in data )
                         {
                             SELF.SORT_ARRAY.push(data[i]);
                         }
+
+                        ////////
+                        SELF.TIMER.init(
+                            1000,
+                            function()
+                            {
+                                if( SELF.COUNT_REF > 0 && !SELF.IS_SAVING && SELF.IS_PUSHING == 0 )
+                                {
+                                    SELF.IS_SAVING = true;
+                                    SELF.sort();
+                                    SELF.save();
+                                }
+                            }
+                        );
+
+
                     }
                 );
 
-                this.TIMER.init(
-                    1000,
-                    function()
-                    {
-                        if( SELF.COUNT_REF > 0 && !SELF.IS_SAVING && SELF.IS_PUSHING == 0 )
-                        {
-                            SELF.IS_SAVING = true;
-                            SELF.sort();
-                            SELF.save();
-                        }
-                    }
-                );
             },
             save:function()
             {
