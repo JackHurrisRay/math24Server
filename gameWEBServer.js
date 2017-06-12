@@ -86,6 +86,20 @@ module.exports =
                 }
             );
 
+            app.put('/game/com_mode/next',
+                function(req, res)
+                {
+                    gameSystem.game_competition_next(req, res);
+                }
+            );
+
+            app.put('/game/com_top',
+                function(req, res)
+                {
+                    gameSystem.game_getTopSort(req, res);
+                }
+            );
+
 
 
             ////////
