@@ -643,6 +643,8 @@ module.exports =
                     {
                         if( PLAYER.GOLD < PLAYER.GOLD_MAX )
                         {
+                            const GOLD_OLD = PLAYER.GOLD;
+
                             PLAYER.GOLD += PLAYER.GOLD_FROM.length;
 
                             if( PLAYER.GOLD > PLAYER.GOLD_MAX )
@@ -650,7 +652,8 @@ module.exports =
                                 PLAYER.GOLD = PLAYER.GOLD_MAX;
                             }
 
-                            msg.GOLD   = PLAYER.GOLD;
+                            msg.GOLD     = PLAYER.GOLD;
+                            msg.GOLD_ADD = PLAYER.GOLD - GOLD_OLD;
                             msg.status = 0;
 
                             PLAYER.GOLD_FROM = [];
