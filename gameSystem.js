@@ -158,7 +158,7 @@ module.exports =
 
                                     PLAYER.UID = UID;
                                     PLAYER.isVerify   = true;
-                                    PLAYER.inviter_id = body.inviter_id;
+                                    PLAYER.INVITER_ID = null;
 
                                     ////////
                                     req.session.PLAYER_DATA = SELF.PLAYERS[UID];
@@ -216,15 +216,30 @@ module.exports =
                                                     PLAYER.COMPETITION_TIMES = _storePlayerData.COMPETITION_TIMES;
                                                     PLAYER.RECORD_COM_TOP    = _storePlayerData.RECORD_COM_TOP;
 
+                                                    ////////
+                                                    const _inviter_date = body.inviter_datecheck;
 
+                                                    if( _inviter_date && typeof _inviter_date == "number" && body.inviter_id != UID )
+                                                    {
+                                                        //check date time out
+                                                        var _now = (new Date()).getTime();
+                                                        var _last = _now - _inviter_date;
+
+                                                        if( _last < 1000 * 60 * 60 * 12 )
+                                                        {
+                                                            PLAYER.INVITER_ID = body.inviter;
+                                                        }
+                                                    }
                                                 }
 
                                                 ////////
-                                                //check pool and refresh new pool
-
-
                                                 msg.GOLD_MAX = PLAYER.GOLD_MAX;
                                                 msg.GOLD     = PLAYER.GOLD;
+
+                                                if( PLAYER.GOLD_FROM && PLAYER.GOLD_FROM.length > 0 )
+                                                {
+                                                    msg.GOLD_FROM = PLAYER.GOLD_FROM;
+                                                }
 
                                                 PLAYER.REFRESH_NEXT_DAY();
                                             }
@@ -440,6 +455,34 @@ module.exports =
                                 }
 
                                 this.PLAYERS_DATA_STORE.saveData(UID, PLAYER);
+
+                                ////////
+                                if( PLAYER.INVITER_ID && this.PLAYERS[PLAYER.INVITER_ID] )
+                                {
+                                    var _inviter = this.PLAYERS[PLAYER.INVITER_ID];
+
+                                    if( !_inviter.GOLD_FROM )
+                                    {
+                                        _inviter.GOLD_FROM = [];
+                                    }
+
+                                    var checkNoExist = true;
+
+                                    for( var i in _inviter.GOLD_FROM )
+                                    {
+                                        if(_inviter.GOLD_FROM[i] == PLAYER.UID )
+                                        {
+                                            checkNoExist = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if( checkNoExist )
+                                    {
+                                        _inviter.GOLD_FROM.push(PLAYER.UID);
+                                    }
+                                }
+
                             }
 
                             ////////
@@ -583,6 +626,43 @@ module.exports =
                             msg.status = 401;
                         }
 
+                    }
+
+                    SEND_MSG(res, msg);
+                },
+                game_gold_from:function(req, res)
+                {
+                    var PLAYER_SESSION = req.session.PLAYER_DATA;
+                    const UID = PLAYER_SESSION.UID;
+                    var PLAYER = this.PLAYERS[UID];
+
+                    var msg = {};
+                    msg.status = 400;
+
+                    if( PLAYER && PLAYER_SESSION && PLAYER.GOLD_FROM && PLAYER.GOLD_FROM.length > 0 )
+                    {
+                        if( PLAYER.GOLD < PLAYER.GOLD_MAX )
+                        {
+                            PLAYER.GOLD += PLAYER.GOLD_FROM.length;
+
+                            if( PLAYER.GOLD > PLAYER.GOLD_MAX )
+                            {
+                                PLAYER.GOLD = PLAYER.GOLD_MAX;
+                            }
+
+                            msg.GOLD   = PLAYER.GOLD;
+                            msg.status = 0;
+
+                            PLAYER.GOLD_FROM = [];
+                        }
+                        else
+                        {
+                            msg.status = 402;
+                        }
+                    }
+                    else
+                    {
+                        msg.status = 401;
                     }
 
                     SEND_MSG(res, msg);

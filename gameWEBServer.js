@@ -100,6 +100,12 @@ module.exports =
                 }
             );
 
+            app.put('/game/add_gold_from',
+                function(req, res)
+                {
+                    gameSystem.game_gold_from(req, res);
+                }
+            );
 
 
             ////////
