@@ -162,7 +162,8 @@ module.exports =
                     UID:player_data.UID,
                     GOLD:player_data.GOLD,
                     DATE:player_data.DATE,
-                    COMPETITION_TIMES:player_data.COMPETITION_TIMES
+                    COMPETITION_TIMES:player_data.COMPETITION_TIMES,
+                    RECORD_COM_TOP:player_data.RECORD_COM_TOP,
                 };
 
                 this.COUNT_REF += 1;
@@ -301,12 +302,44 @@ module.exports =
             },
             sort:function()
             {
+                /*
                 this.SORT_ARRAY.sort(
                     function(a, b)
                     {
                         return a.time > b.time;
                     }
                 );
+                */
+
+                const _array_length = this.SORT_ARRAY.length;
+
+                var func_changeData =
+                    function(a, b)
+                    {
+                        var c = { player_id: a.player_id, time: a.time };
+
+                        a.player_id = b.player_id;
+                        a.time      = b.time;
+
+                        b.player_id = c.player_id;
+                        b.time      = c.time;
+                    };
+
+                for( var i = 0; i<_array_length; i++ )
+                {
+                    var _obj1 = this.SORT_ARRAY[i];
+
+                    for( var j = i + 1; j<_array_length; j++ )
+                    {
+                        var _obj2 = this.SORT_ARRAY[j];
+
+                        if( _obj1.time > _obj2.time )
+                        {
+                            func_changeData(_obj1, _obj2);
+                        }
+                    }
+                }
+
             }
 
 

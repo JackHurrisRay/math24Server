@@ -156,9 +156,11 @@ module.exports =
 
                                     var PLAYER = SELF.PLAYERS[UID];
 
-                                    SELF.PLAYERS[UID].UID = UID;
-                                    SELF.PLAYERS[UID].isVerify   = true;
-                                    SELF.PLAYERS[UID].inviter_id = body.inviter_id;
+                                    PLAYER.UID = UID;
+                                    PLAYER.isVerify   = true;
+                                    PLAYER.inviter_id = body.inviter_id;
+
+                                    ////////
                                     req.session.PLAYER_DATA = SELF.PLAYERS[UID];
 
                                     if( PLAYER && !PLAYER.REFRESH_NEXT_DAY )
@@ -212,7 +214,13 @@ module.exports =
                                                     PLAYER.GOLD = _storePlayerData.GOLD;
                                                     PLAYER.DATE = _storePlayerData.DATE;
                                                     PLAYER.COMPETITION_TIMES = _storePlayerData.COMPETITION_TIMES;
+                                                    PLAYER.RECORD_COM_TOP    = _storePlayerData.RECORD_COM_TOP;
+
+
                                                 }
+
+                                                ////////
+                                                //check pool and refresh new pool
 
 
                                                 msg.GOLD_MAX = PLAYER.GOLD_MAX;
@@ -476,42 +484,42 @@ module.exports =
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 4999 + common.GET_RAND(100) + _topSort[i] * 400;
+                                _topSort[i] = 4999 + common.GET_RAND(100) + _topSort[i] * 400 - PLAYER.COMPETITION_TIMES * 10;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 100 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 3999 + common.GET_RAND(80) + _topSort[i] * 200;
+                                _topSort[i] = 3999 + common.GET_RAND(80) + _topSort[i] * 200 - PLAYER.COMPETITION_TIMES * 8;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 200 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 2999 + common.GET_RAND(60) + _topSort[i] * 100;
+                                _topSort[i] = 2999 + common.GET_RAND(60) + _topSort[i] * 100 - PLAYER.COMPETITION_TIMES * 4;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 300 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 1999 + common.GET_RAND(40) + _topSort[i] * 80;
+                                _topSort[i] = 1999 + common.GET_RAND(40) + _topSort[i] * 80 - PLAYER.COMPETITION_TIMES * 2;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 400 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 999 + common.GET_RAND(20) + _topSort[i] * 40;
+                                _topSort[i] = 999 + common.GET_RAND(20) + _topSort[i] * 40 - PLAYER.COMPETITION_TIMES;
                             }
                         }
                         else if( PLAYER.COMPETITION_TIMES < 500 )
                         {
                             for( var i in _topSort )
                             {
-                                _topSort[i] = 299 + common.GET_RAND(10) + _topSort[i] * 20;
+                                _topSort[i] = 299 + common.GET_RAND(10) + _topSort[i] * 20 - PLAYER.COMPETITION_TIMES/2;
                             }
                         }
 
@@ -519,6 +527,10 @@ module.exports =
                         msg.competition_times = PLAYER.COMPETITION_TIMES;
 
                         msg.status = 0;
+
+                        ////////
+                        PLAYER.RECORD_COM_TOP = _topSort;
+
                     }
                     else
                     {
