@@ -157,7 +157,8 @@ module.exports =
                                     var PLAYER = SELF.PLAYERS[UID];
 
                                     SELF.PLAYERS[UID].UID = UID;
-                                    SELF.PLAYERS[UID].isVerify = true;
+                                    SELF.PLAYERS[UID].isVerify   = true;
+                                    SELF.PLAYERS[UID].inviter_id = body.inviter_id;
                                     req.session.PLAYER_DATA = SELF.PLAYERS[UID];
 
                                     if( PLAYER && !PLAYER.REFRESH_NEXT_DAY )
