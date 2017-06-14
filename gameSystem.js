@@ -238,7 +238,27 @@ module.exports =
 
                                                 if( PLAYER.GOLD_FROM && PLAYER.GOLD_FROM.length > 0 )
                                                 {
-                                                    msg.GOLD_FROM = PLAYER.GOLD_FROM;
+                                                    //check without self
+                                                    var _tempGOLD_FROM = [];
+                                                    for( var i in  PLAYER.GOLD_FROM )
+                                                    {
+                                                        var obj = PLAYER.GOLD_FROM[i];
+
+                                                        if( obj != UID )
+                                                        {
+                                                            _tempGOLD_FROM.push(obj);
+                                                        }
+                                                    }
+
+                                                    if( _tempGOLD_FROM.length != PLAYER.GOLD_FROM.length )
+                                                    {
+                                                        PLAYER.GOLD_FROM = _tempGOLD_FROM;
+                                                    }
+
+                                                    if( PLAYER.GOLD_FROM.length > 0 )
+                                                    {
+                                                        msg.GOLD_FROM = PLAYER.GOLD_FROM;
+                                                    }
                                                 }
 
                                                 PLAYER.REFRESH_NEXT_DAY();
