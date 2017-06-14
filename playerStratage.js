@@ -266,12 +266,12 @@ module.exports =
                     }
                     */
 
-                    object.time = ( object.time + time ) / 2.0;
+                    object.time = Math.floor( ( object.time + time ) / 2.0 );
 
                 }
                 else
                 {
-                    this.SORT_ARRAY.push({player_id:player_id, time:time});
+                    this.SORT_ARRAY.push({player_id:player_id, time: Math.floor( time )});
                 }
 
                 if( _needSort )
